@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/mvHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:text="Mobile Number Verification"
+        android:paddingTop="100dp"
+        android:textSize="30sp"
+        android:textColor="@color/colorBlack"/>
+
+
+    <TextView
+        android:id="@+id/mvMobileNumber"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mvHeading"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:text="OTP will be send to 8714444740. Click to edit" />
+
+    <com.demo.thirdeye.utility.OtpViewText
+        android:paddingTop="10dp"
+        android:layout_below="@+id/mvMobileNumber"
+        android:id="@+id/otpTextBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.demo.thirdeye.utility.OtpViewText>
+
+
+
+        <Button
+            android:id="@+id/mvSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_custom_button"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="SUBMIT"
+            android:layout_marginEnd="35dp"
+            android:layout_toStartOf="@+id/mvOtpResent"
+            android:layout_alignTop="@+id/mvOtpResent" />
+
+        <Button
+            android:id="@+id/mvOtpResent"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_custom_button"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="RE-SEND OTP"
+            android:layout_marginEnd="83dp"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/otpTextBox"
+            android:layout_alignParentEnd="true" />
+
+
+
+</RelativeLayout>

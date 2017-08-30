@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">Third Eye</string>
+
+    <string name="title_activity_login">Login</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_login_main">Sign in</string>
+
+    <!-- Strings related to loading screen -->
+    <string name="loading_text">Open Your Eye...</string>
+
+    <!-- Strings related to startup page -->
+    <string name="login">LOGIN</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="page_1_caption">The world watches through YOUR EYE</string>
+    <string name="page_1_caption_details">Now you can share the news to around 100\'s of channels in INDIA in one click!</string>
+    <string name="page_2_caption">Publish your stories to the news world</string>
+    <string name="page_2_caption_details">Share your videos, Photos and Audios to the news channels directly from your phone</string>
+    <string name="page_3_caption">Get paid for your stories</string>
+    <string name="page_3_caption_details">You will get reward money in your Paytm account</string>
+
+
+    <!-- Strings related to login form page -->
+    <string name="login_heading">Login to the new World of NEWS</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Login</string>
+    <string name="error_invalid_Phone_number_or_userID">This Phone Number or User ID is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- Strings related to sign up form page -->
+    <string name="signup_heading">In this large world YOU are UNIQE</string>
+    <string name="prompt_username">Name</string>
+    <string name="prompt_mobile_no">Mobile Number</string>
+    <string name="prompt_email">Email ID</string>
+    <string name="prompt_confirm_password">Confirm Password</string>
+    <string name="empty_username">Name Field can not be empty</string>
+    <string name="empty_mobile_no">Mobile Number Field can not be empty</string>
+    <string name="empty_email">Email ID Field can not be empty</string>
+    <string name="empty_password">Password Field can not be empty</string>
+    <string name="empty_confirm_password">Confirm Password Field can not be empty</string>
+
+    <string name="incorrect_username">Name Field have only [a-z,A-Z,0-9,_, ]</string>
+    <string name="uniqe_mobile">Mobile Number is already existing</string>
+    <string name="incorrect_email">Wrong email ID</string>
+    <string name="incorrect_mobile">Wrong Mobile Number</string>
+    <string name="incorrect_password">Password must contain minimum 8 characters</string>
+    <string name="incorrect_confirm_password">Password is not matching</string>
+    <string name="error_terms_condition">Please select the Terms and Conditions</string>
+
+
+
+
+
+
+    <!-- Strings related to Home page form page -->
+    <string name="title_activity_home_page">HomePage</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

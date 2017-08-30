@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.99"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:gravity="center_horizontal|center"
+            android:textSize="30dp" />
+
+        <ImageView
+            android:id="@+id/large_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center"
+            android:layout_weight="0.21"
+            android:src="@drawable/dummy" />
+
+        <TextView
+            android:id="@+id/captionDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5"
+            android:textColor="@color/cardview_light_background"
+            android:gravity="center_horizontal|center"
+            android:textSize="25dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="20dp"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

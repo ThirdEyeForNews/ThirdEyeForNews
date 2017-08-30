@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cv"
+        app:cardCornerRadius="5dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <RelativeLayout
+                android:id="@+id/userProfileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                >
+
+                <ImageView
+                    android:id="@+id/userPic"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:padding="5dp"/>
+                <TextView
+                    android:id="@+id/userNameForPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/userPic"
+                    android:textSize="15sp"
+                    android:paddingTop="13dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/colorBlack"
+                    />
+                <TextView
+                    android:id="@+id/timeDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userNameForPost"
+                    android:layout_toRightOf="@+id/userPic"
+                    android:textSize="7sp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="5dp"
+                    android:text="Aug 06"
+                    android:textColor="@color/cardview_shadow_start_color"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/news_Heading"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/userProfileLayout"
+                android:background="@drawable/custom_border"
+                android:gravity="center_vertical|center_horizontal|center"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/news_photo"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/news_Heading"
+                android:scrollbars="none">
+
+            </android.support.v4.view.ViewPager>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                android:layout_alignBottom="@+id/news_photo" />
+
+            <ScrollView
+                android:id="@+id/scroll"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:scrollbarThumbVertical="@null"
+                android:scrollbarThumbHorizontal="@null"
+                android:requiresFadingEdge="vertical"
+                android:fadingEdgeLength="20dp"
+                android:layout_below="@+id/news_photo"
+                >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/news_details"
+                android:layout_alignParentLeft="true"
+                android:padding="3dp"
+                android:textColor="@color/colorBlack"
+                />
+            </ScrollView>
+
+            <RelativeLayout
+                android:id="@+id/counts"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/scroll"
+                android:background="@drawable/custom_border"
+                >
+
+                <TextView
+                    android:id="@+id/likeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/likeButton"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:paddingLeft="5dp"
+                    android:text="0"
+                    android:textColor="@color/colorBlack"
+                    />
+
+                <TextView
+                    android:id="@+id/dislikeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/dislikeButton"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:paddingLeft="5dp"
+                    android:text="0"
+                    android:textColor="@color/colorBlack"
+                    />
+
+                <ImageView
+                    android:id="@+id/likeButton"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="10dp"
+                    app:srcCompat="@drawable/like" />
+
+                <TextView
+                    android:id="@+id/viewCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="10dp"
+                    android:text="0"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:textColor="@color/colorBlack"
+                    />
+
+                <ImageView
+                    android:id="@+id/dislikeButton"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/likeCount"
+                    android:paddingLeft="10dp"
+                    app:srcCompat="@drawable/dislike"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/viewCount"
+                    android:paddingRight="5dp"
+                    app:srcCompat="@drawable/eye" />
+
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/likeDislike"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/counts"
+                android:background="@drawable/custom_border"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.33">
+
+
+
+                    <ImageView
+                        android:id="@+id/likeNewsButton"
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/like_no"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="32dp" />
+                    <TextView
+                        android:id="@+id/liketext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="Like"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/likeNewsButton" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.34">
+
+                    <TextView
+                        android:id="@+id/commenttext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Comment"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.33"
+                    android:weightSum="1">
+
+                    <ImageView
+                        android:id="@+id/dislikeNewsButton"
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="4dp"
+                        app:srcCompat="@drawable/dislike_no"
+                        android:layout_weight="1.14"
+                        android:layout_toStartOf="@+id/disliketext" />
+
+                    <TextView
+                        android:id="@+id/disliketext"
+                        android:layout_width="57dp"
+                        android:paddingLeft="5dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:text="Dislike" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
