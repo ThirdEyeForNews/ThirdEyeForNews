@@ -6,13 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.demo.thirdeye.CameraActivity;
 import com.demo.thirdeye.HomePage;
+import com.demo.thirdeye.LoadingSignIn;
+import com.demo.thirdeye.Login;
 import com.demo.thirdeye.LoginMainActivity;
 import com.demo.thirdeye.R;
 import com.demo.thirdeye.SignUpPage;
@@ -43,6 +48,9 @@ public class MongoDBConnector  {
 
     private static UserProfile USER_PROFILE = null;
     private static List<News> NEWS_LIST = null;
+
+    private static final String TAG = "MongoDBConnector";
+
 
 
     private static final String DB_NAME = "ThirdEye";
@@ -98,7 +106,7 @@ public class MongoDBConnector  {
 
     public MongoDBConnector(Context context){
         MongoDBConnector.context = context;
-        Settings.INTERNET_STATUS =  isNetworkAvailable();
+        Settings.INTERNET_STATUS =  Settings.isNetworkAvailable(context);
         if (Settings.INTERNET_STATUS) {
             stitchClient = new StitchClient(context, APP_ID);
             mongoClient = new MongoClient(stitchClient, MONGODB_SERVICE_NAME);
@@ -108,12 +116,6 @@ public class MongoDBConnector  {
         }
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     private static void doAnonymousAuthentication() {
 
@@ -153,6 +155,7 @@ public class MongoDBConnector  {
 
     public void insertUserProfile(final UserProfile userProfile) {
         if (!stitchClient.isAuthenticated()) {
+            doAnonymousAuthentication();
             return ;
         } else {
 
@@ -235,6 +238,7 @@ public class MongoDBConnector  {
     public void getNews(final RecyclerView mRecyclerView) {
         NEWS_LIST = null;
         if (!stitchClient.isAuthenticated()) {
+            doAnonymousAuthentication();
             return ;
         } else {
             final Document query = new Document( );
@@ -367,21 +371,21 @@ public class MongoDBConnector  {
     }
 
     public void Login(String phoneNoOrEmail,final String mPassword,final boolean keepMeSignIn) {
-        if (!stitchClient.isAuthenticated()) {
-            Toast.makeText(context, "Not Authorized!", Toast.LENGTH_LONG).show();
-        }else{
+        if (!stitchClient.isAuthenticated())
+            doAnonymousAuthentication();
+
             final Document query = new Document( MOBILE_NO_COLM,phoneNoOrEmail);
             mongoClient.getDatabase(DB_NAME).getCollection(USER_PROFILE_TABLE).find(query).continueWith(new Continuation<List<Document>, UserProfile>() {
                 @Override
                 public UserProfile then(@NonNull Task<List<Document>> task) {
                     final UserProfile userProfile = new UserProfile();
-                    userProfile.setUserName("Error");
                     if (task.isSuccessful()) {
                         if (task.getResult().size() == 0) {
                             Toast.makeText(context, "No Result Fount!", Toast.LENGTH_LONG).show();
                             return userProfile;
                         } else {
                             final Document resultSet = task.getResult().get(0);
+                            Log.d(TAG,"Fetch user : "+resultSet.getString(NAME_COLM));
                             try {
                                 userProfile.setUserName(resultSet.getString(NAME_COLM));
                                 userProfile.setMobileNumber(resultSet.getString(MOBILE_NO_COLM));
@@ -418,19 +422,12 @@ public class MongoDBConnector  {
                 public void onComplete(@NonNull Task<UserProfile> task) {
 
                     UserProfile userProfile = task.getResult();
-                    if (!userProfile.getUserName().equals("Error")){
-                        Settings.USER_PROFILE = userProfile;
+                    if (null != userProfile){
                             if (mPassword.equals(userProfile.getPassword())) {
                                 userProfile.setLogin(keepMeSignIn);
-                                //PhoneDBConnector phoneDBConnector = new PhoneDBConnector(context);
-                                /*if (!phoneDBConnector.insertUserProfile(userProfile)) {
-                                    if (userProfile.isLogin())
-                                        phoneDBConnector.updateUserProfilePassword(userProfile);
-                                    Toast.makeText(context, "Phone DB Updated not inserted", Toast.LENGTH_LONG).show();
-                                }*/
-
-                                //userProfile.setDiscription(phoneDBConnector.insertUserProfile(userProfile));
                                 Settings.USER_PROFILE = userProfile;
+                                PhoneDBConnector phoneDBConnector = new PhoneDBConnector(context);
+                                phoneDBConnector.insertUserProfile(userProfile);
 
                                 Intent homPage = new Intent(context, HomePage.class);
                                 context.startActivity(homPage);
@@ -443,6 +440,69 @@ public class MongoDBConnector  {
 
                 }
             });
+
+    }
+
+    public void getNewsFirst() {
+        Log.d(TAG,"getNewsFirst");
+
+        if (!stitchClient.isAuthenticated()) {
+            Log.d(TAG,"No Auth");
+            return ;
+        } else {
+            final Document query = new Document( );
+            final Document sort = new Document( LAST_UPDATE_TIME_COLM,1);
+            mongoClient.getDatabase(DB_NAME).getCollection(NEWS_TABLE).find(query).continueWith(new Continuation<List<Document>, List<News>>() {
+                @Override
+                public List<News> then(@NonNull Task<List<Document>> task) {
+                    List<News> newsList = null;
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() == 0) {
+                            Log.d(TAG,"No News in Remort DB");
+                            return null;
+                        }
+                        Log.d(TAG,"result Size from remort : "+task.getResult().size());
+                        newsList = new ArrayList<>();
+                        try {
+                            for (Document resultSet :
+                                    task.getResult()) {
+                                final News news = new News();
+                                news.setHeading(resultSet.getString(HEADING_COLM));
+                                news.setDetails(resultSet.getString(DETAILS_COLM));
+                                news.setViewCount(resultSet.getDouble(VIEW_COUNT_COLM));
+                                news.setLikeCount(resultSet.getDouble(LIKE_COUNT_COLM));
+                                news.setDislikeCount(resultSet.getDouble(DISLIKE_COUNT_COLM));
+                                news.setUserProfile(new UserProfile("", resultSet.getString(MOBILE_NO_COLM), "", "", false, 0));
+                                news.setNewsPic(Arrays.asList(null == resultSet.get(PICS_COLM, Bitmap.class) ? BitmapFactory.decodeResource(context.getResources(), R.drawable.dummy) : resultSet.get(PICS_COLM, Bitmap.class)));
+                                news.setHeading(resultSet.getString(HEADING_COLM));
+                                Calendar createdDate = Calendar.getInstance();//(null == resultSet.get(CREATED_TIME_COLM, Calendar.class))?Calendar.getInstance():resultSet.get(CREATED_TIME_COLM, Calendar.class);
+                                news.setDate(createdDate.get(Calendar.DATE) + "-" + createdDate.get(Calendar.MONTH) + "-" + createdDate.get(Calendar.YEAR));
+                                news.setTime(createdDate.get(Calendar.HOUR) + ":" + createdDate.get(Calendar.MINUTE) + ":" + createdDate.get(Calendar.SECOND));
+                                Log.d(TAG,"News Heading : "+news.getHeading());
+                                newsList.add(news);
+                            }
+                        }catch (Exception e){
+                            Log.d(TAG,"Exception : "+e.getMessage());
+
+                        }
+
+                    }
+                    return newsList;
+                }
+            }).addOnCompleteListener(new OnCompleteListener<List<News>>() {
+                @Override
+                public void onComplete(@NonNull Task<List<News>> task) {
+
+                    Settings.ONLINE_NEWS = task.getResult();
+                    Log.d(TAG,"Result : "+Settings.ONLINE_NEWS.get(0).getHeading());
+
+                    Intent intent = new Intent(context, HomePage.class);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+
+                }
+            });
+
         }
     }
 }

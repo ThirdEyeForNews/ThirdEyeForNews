@@ -97,7 +97,6 @@ public class LoginMainActivity extends AppCompatActivity  {
         mEmailSignInButton.setTypeface(Settings.AGENCY_FB);
         keepMeSignIn.setTypeface(Settings.AGENCY_FB);
 
-        //populateAutoComplete();
         forgetPassword.setPaintFlags(forgetPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         forgetPassword.setText("Forget Password?");
 
@@ -278,6 +277,10 @@ public class LoginMainActivity extends AppCompatActivity  {
         @Override
         protected void onPostExecute(final Integer status) {
             mAuthTask = null;
+            if (status == 1){
+                showProgress(false);
+                Toast.makeText(LoginMainActivity.this,"Check Your Network",Toast.LENGTH_LONG).show();
+            }
 
         }
 

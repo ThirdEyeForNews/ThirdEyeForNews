@@ -1,15 +1,22 @@
 package com.demo.thirdeye;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.demo.thirdeye.beans.News;
 import com.demo.thirdeye.beans.UserProfile;
@@ -34,12 +42,16 @@ import java.util.List;
 
 public class HomePage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "HomePage";
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private static String LOG_TAG = "CardViewActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"Started");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,8 +61,12 @@ public class HomePage extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (Settings.askForPermissionForCamera(HomePage.this, Manifest.permission.CAMERA)){
+                    Intent intent = new Intent(HomePage.this, CameraActivity.class);
+                    HomePage.this.startActivity(intent);
+                }
+                //Settings.askForPermissionForSensor(HomePage.this, Manifest.permission.BODY_SENSORS);
+
             }
         });
 
@@ -74,8 +90,10 @@ public class HomePage extends AppCompatActivity
 
 
         if(Settings.USER_PROFILE != null){
+
             navigationHeaderName.setText(Settings.USER_PROFILE.getUserName()==null?"Guest User":Settings.USER_PROFILE.getUserName());
             navigationHeaderEmail.setText(Settings.USER_PROFILE.getEmailId()==null?"Login":Settings.USER_PROFILE.getEmailId());
+            Log.d(TAG,"Setting user");
 
         }
 
@@ -84,26 +102,23 @@ public class HomePage extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         MongoDBConnector mongoDBConnector = new MongoDBConnector(this);
-        if (Settings.INTERNET_STATUS) {
-            mongoDBConnector.getNews(mRecyclerView);
-            if (null != Settings.ONLINE_NEWS) {
+
+            //mongoDBConnector.getNews(mRecyclerView);
+            if (null != Settings.ONLINE_NEWS && Settings.ONLINE_NEWS.size()!=0) {
                 mAdapter = new RecyclerViewAdapter(Settings.ONLINE_NEWS);
                 mRecyclerView.setAdapter(mAdapter);
-            } else  {
-                Snackbar.make(this.mRecyclerView, "Internet is connected but internal server error in Third Eye", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Log.d(TAG,"Setting online news : completed");
+            } else {
 
+                if (null != Settings.OFFLINE_NEWS && Settings.OFFLINE_NEWS.size() != 0) {
+                    Snackbar.make(this.mRecyclerView, "No Internet showing old News", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    mAdapter = new RecyclerViewAdapter(Settings.OFFLINE_NEWS);
+                    mRecyclerView.setAdapter(mAdapter);
+                } else
+                    Snackbar.make(this.mRecyclerView, "No Internet, No cache news", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
             }
-        }else{
-            if (null != Settings.OFFLINE_NEWS){
-                Snackbar.make(this.mRecyclerView, "No Internet showing old News", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                mAdapter = new RecyclerViewAdapter(Settings.OFFLINE_NEWS);
-                mRecyclerView.setAdapter(mAdapter);
-            }else
-            Snackbar.make(this.mRecyclerView, "No Internet, No cache news", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -116,7 +131,6 @@ public class HomePage extends AppCompatActivity
                                 .setAction("Retry", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        //TODO : try to connect to Third Eye mongoDB
                                     }
                                 }).show();
 
@@ -127,10 +141,9 @@ public class HomePage extends AppCompatActivity
                                 .setAction("Retry", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if (isNetworkAvailable()){
+                                        if (Settings.isNetworkAvailable(HomePage.this)){
                                             Settings.INTERNET_STATUS = true;
                                             Settings.ONLINE_NEWS = Settings.OFFLINE_NEWS;
-                                            //TODO: try to connect to MongoDB
                                         }
                                     }
                                 }).show();
@@ -139,11 +152,10 @@ public class HomePage extends AppCompatActivity
                                 .setAction("Retry", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if (isNetworkAvailable()){
+                                        if (Settings.isNetworkAvailable(HomePage.this)){
                                             Settings.INTERNET_STATUS = true;
                                             Settings.ONLINE_NEWS = Settings.OFFLINE_NEWS;
 
-                                            //TODO: try to connect to MongoDB
                                         }
                                     }
                                 }).show();
@@ -152,12 +164,7 @@ public class HomePage extends AppCompatActivity
         });
 
     }
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -213,5 +220,19 @@ public class HomePage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED)
+        {
+
+            Intent intent = new Intent(HomePage.this, CameraActivity.class);
+            HomePage.this.startActivity(intent);
+            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+        }
     }
 }

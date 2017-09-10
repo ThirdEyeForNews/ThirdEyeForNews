@@ -16,6 +16,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +33,12 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView
         .Adapter<RecyclerViewAdapter
         .DataObjectHolder> {
-    private static String LOG_TAG = "MyRecyclerViewAdapter";
+    private static String TAG = "MyRecyclerViewAdapter";
     private List<News> mDataset;
     private static MyClickListener myClickListener;
     private View cardView;
     private ViewGroup parent;
+
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
@@ -104,6 +106,8 @@ public class RecyclerViewAdapter extends RecyclerView
     }
 
     public RecyclerViewAdapter(List<News> myDataset) {
+        Log.d(TAG,"Started : "+myDataset.size());
+
         mDataset = myDataset;
     }
 
@@ -120,25 +124,35 @@ public class RecyclerViewAdapter extends RecyclerView
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
-        holder.heading.setText(mDataset.get(position).getHeading());
-        holder.details.setText(mDataset.get(position).getDetails());
-        holder.details.setSelected(true);
-        List<Bitmap> images = mDataset.get(position).getNewsPic();
-        PageAdapterForNews newPageAdapter = new PageAdapterForNews(parent.getContext(),images);
-        holder.images.setAdapter(newPageAdapter);
-        holder.tabLayout.setupWithViewPager(holder.images,true);
+        try {
+            Log.d(TAG,"binding started : "+position);
+
+            holder.heading.setText(mDataset.get(position).getHeading());
+            holder.details.setText(mDataset.get(position).getDetails());
+            holder.details.setSelected(true);
+            List<Bitmap> images = mDataset.get(position).getNewsPic();
+            PageAdapterForNews newPageAdapter = new PageAdapterForNews(parent.getContext(), images);
+            holder.images.setAdapter(newPageAdapter);
+            holder.tabLayout.setupWithViewPager(holder.images, true);
 
 
-        Bitmap pic = mDataset.get(position).getUserProfile().getProfilePic();
-        RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(parent.getResources(), pic);
-        dr.setCornerRadius(50);
-        holder.profilePic.setImageDrawable(dr);
+            Bitmap pic = mDataset.get(position).getUserProfile().getProfilePic();
+            RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(parent.getResources(), pic);
+            dr.setCornerRadius(50);
+            holder.profilePic.setImageDrawable(dr);
 
-        holder.userName.setText(mDataset.get(position).getUserProfile().getUserName());
-        holder.DateAndTime.setText(mDataset.get(position).getDate()+" "+mDataset.get(position).getTime());
-        holder.viewCount.setText(mDataset.get(position).getViewCount()+"");
-        holder.likeCount.setText(mDataset.get(position).getLikeCount()+"");
-        holder.dislikeCount.setText(mDataset.get(position).getDislikeCount()+"");
+            holder.userName.setText(mDataset.get(position).getUserProfile().getUserName());
+            holder.DateAndTime.setText(mDataset.get(position).getDate() + " " + mDataset.get(position).getTime());
+            holder.viewCount.setText(mDataset.get(position).getViewCount() + "");
+            holder.likeCount.setText(mDataset.get(position).getLikeCount() + "");
+            holder.dislikeCount.setText(mDataset.get(position).getDislikeCount() + "");
+            Log.d(TAG,"binding completed");
+
+        }catch (Exception e)
+        {
+            Log.d(TAG,"Exception : "+e.getMessage());
+
+        }
     }
 
 

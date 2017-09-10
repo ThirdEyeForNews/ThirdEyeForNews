@@ -74,7 +74,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signUp.setTextColor(Color.BLUE);
-                Intent intent = new Intent(Login.this, MobileVerificationActivity.class);
+                Intent intent = new Intent(Login.this, SignUpPage.class);
                 Login.this.startActivity(intent);
                 Login.this.overridePendingTransition(R.animator.enter_right, R.animator.exit_left);
                 finish();

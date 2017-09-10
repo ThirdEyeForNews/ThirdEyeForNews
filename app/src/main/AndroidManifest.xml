@@ -2,16 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.demo.thirdeye">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
     <service
         android:name=".MyGCMListenerService"
-        android:exported="false" >
+        android:exported="false">
         <intent-filter>
             <action android:name="com.google.android.c2dm.intent.RECEIVE" />
         </intent-filter>
@@ -19,7 +22,7 @@
 
     <receiver android:name="utility.SmsReceiver">
         <intent-filter>
-            <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            <action android:name="android.provider.Telephony.SMS_RECEIVED" />
         </intent-filter>
     </receiver>
 
@@ -31,7 +34,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LodingSignIn"
+            android:name=".LoadingSignIn"
             android:theme="@style/HiddenTitleTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,10 +56,15 @@
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MobileVerificationActivity"
             android:theme="@style/HiddenTitleTheme" />
+        <activity
+            android:name=".CameraActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_camara"
+            android:theme="@style/HiddenTitleTheme"></activity>
     </application>
 
 </manifest>

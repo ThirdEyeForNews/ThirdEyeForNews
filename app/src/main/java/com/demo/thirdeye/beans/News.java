@@ -14,9 +14,9 @@ public class News {
     String heading;
     List<Bitmap> newsPic;
     String Details;
-    int likeCount;
-    int viewCount;
-    int dislikeCount;
+    double likeCount;
+    double viewCount;
+    double dislikeCount;
     UserProfile userProfile;
     String date;
     String time;
@@ -86,27 +86,27 @@ public class News {
         Details = details;
     }
 
-    public int getLikeCount() {
+    public double getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(int likeCount) {
+    public void setLikeCount(double likeCount) {
         this.likeCount = likeCount;
     }
 
-    public int getViewCount() {
+    public double getViewCount() {
         return viewCount;
     }
 
-    public void setViewCount(int viewCount) {
+    public void setViewCount(double viewCount) {
         this.viewCount = viewCount;
     }
 
-    public int getDislikeCount() {
+    public double getDislikeCount() {
         return dislikeCount;
     }
 
-    public void setDislikeCount(int dislikeCount) {
+    public void setDislikeCount(double dislikeCount) {
         this.dislikeCount = dislikeCount;
     }
 
