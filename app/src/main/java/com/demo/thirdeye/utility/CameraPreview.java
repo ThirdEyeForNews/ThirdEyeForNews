@@ -1,10 +1,13 @@
 package com.demo.thirdeye.utility;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import java.io.IOException;
 
@@ -16,6 +19,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
+    private static final String TAG = "CameraPreview";
+
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
@@ -26,14 +31,25 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        mHolder.setFixedSize(100, 100);
+        Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        mHolder.setFixedSize(display.getWidth(), display.getHeight());
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the
         // preview.
+
         try {
+            if (this.getResources().getConfiguration().orientation
+                    != Configuration.ORIENTATION_LANDSCAPE)
+            {
+                mCamera.setDisplayOrientation(90);
+
+            }
+            else
+            {
+                mCamera.setDisplayOrientation(0);
+            }
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {

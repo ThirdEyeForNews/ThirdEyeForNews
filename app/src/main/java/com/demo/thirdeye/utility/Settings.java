@@ -25,6 +25,11 @@ public class Settings {
     public static boolean INTERNET_STATUS = false;
     public static List<News> ONLINE_NEWS;
     public static List<News> OFFLINE_NEWS;
+    public static int CURRENT_OPEN_CAMERA = 0;
+    public static boolean FLASH_ON = false;
+    public static boolean IS_IMAGE = true;
+
+
 
     static final Integer CAMERA = 0x5;
 
@@ -51,7 +56,7 @@ public class Settings {
             }
             return false;
         } else {
-            Toast.makeText(context, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
             return true;
         }
     }

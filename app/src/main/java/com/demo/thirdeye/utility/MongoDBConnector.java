@@ -19,6 +19,7 @@ import com.demo.thirdeye.HomePage;
 import com.demo.thirdeye.LoadingSignIn;
 import com.demo.thirdeye.Login;
 import com.demo.thirdeye.LoginMainActivity;
+import com.demo.thirdeye.MobileVerificationActivity;
 import com.demo.thirdeye.R;
 import com.demo.thirdeye.SignUpPage;
 import com.demo.thirdeye.beans.Address;
