@@ -207,13 +207,16 @@ public class HomePage extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_top_news) {
 
-        } else if (id == R.id.nav_learning) {
+        } else if (id == R.id.nav_followers) {
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_settings) {
+            /* Inserted by Prasobh for Settings Page*/
+            Intent intent = new Intent(HomePage.this, SettingsActivity.class);
+            HomePage.this.startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_terms) {
 
         }
 

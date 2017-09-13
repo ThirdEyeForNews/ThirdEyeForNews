@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_top_news"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Top News" />
+            android:title="Hot news" />
         <item
             android:id="@+id/nav_my_news"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="My News" />
+            android:title="My Stories" />
         <item
-            android:id="@+id/nav_learning"
+            android:id="@+id/nav_followers"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Learnings" />
+            android:title="My Followers" />
         <item
-            android:id="@+id/nav_logout"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Logout" />
+            android:title="Settings" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Help us">
         <menu>
+            <item
+                android:id="@+id/nav_demo"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Demo kit" />
+            <shape>
+                <gradient
+                    android:angle="0"
+                    android:centerColor="#999999"
+                    android:endColor="#555555"
+                    android:height="1px"
+                    android:startColor="#555555" />
+            </shape>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Share the App" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_terms"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Terms and conditions" />
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Contact us" />
         </menu>
     </item>
+
 
 </menu>
