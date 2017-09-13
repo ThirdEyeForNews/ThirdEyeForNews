@@ -35,7 +35,10 @@ import com.mongodb.stitch.android.auth.anonymous.AnonymousAuthProvider;
 import com.mongodb.stitch.android.services.mongodb.MongoClient;
 
 import org.bson.Document;
+import org.bson.types.Binary;
 
+import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -92,6 +95,9 @@ public class MongoDBConnector  {
     private static final String LIKE_COUNT_COLM = "LIKE_COUNT";
     private static final String DISLIKE_COUNT_COLM = "DISLIKE_COUNT";
     private static final String AUTHOR_MOBILE_NO_COLM = "AUTHOR_MOBILE_NO";
+    private static final String AUTHOR_PROFILE_PIC_COLM = "AUTHOR_PROFILE_PIC";
+    private static final String AUTHOR_NAME_COLM = "AUTHOR_NAME";
+
     private static final String CREATED_TIME_COLM = "CREATED_TIME";
     private static final String LAST_UPDATE_TIME_COLM = "LAST_UPDATED_TIME";
 
@@ -343,19 +349,28 @@ public class MongoDBConnector  {
         if (!stitchClient.isAuthenticated()) {
         } else {
 
-            Document userDocument = new Document();
+            Log.d(TAG, "insertNews: started");
+            Document newsDocument = new Document();
             if (null != news.getHeading())
-                userDocument.append(HEADING_COLM, news.getHeading());
+                newsDocument.append(HEADING_COLM, news.getHeading());
             if (null != news.getDetails())
-                userDocument.append(DETAILS_COLM, news.getDetails());
-            userDocument.append(VIEW_COUNT_COLM, news.getViewCount());
-            userDocument.append(LIKE_COUNT_COLM, news.getLikeCount());
-            userDocument.append(DISLIKE_COUNT_COLM, news.getDislikeCount());
-            userDocument.append(AUTHOR_MOBILE_NO_COLM, news.getUserProfile().getMobileNumber());
-            if (null != news.getNewsPic())
-                userDocument.append(PICS_COLM, news.getNewsPic());
+                newsDocument.append(DETAILS_COLM, news.getDetails());
+            if (null != news.getNewsPic() || news.getNewsPic().size()!=0){
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                news.getNewsPic().get(0).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                Binary data = new Binary(byteArray);
+                newsDocument.append(PICS_COLM, data);
+            }
+            newsDocument.append(VIEW_COUNT_COLM, news.getViewCount());
+            newsDocument.append(LIKE_COUNT_COLM, news.getLikeCount());
+            newsDocument.append(DISLIKE_COUNT_COLM, news.getDislikeCount());
 
-            mongoClient.getDatabase(DB_NAME).getCollection(NEWS_TABLE).insertOne(userDocument).continueWith(new Continuation<Void, Object>() {
+            newsDocument.append(AUTHOR_MOBILE_NO_COLM, news.getUserProfile().getMobileNumber());
+            newsDocument.append(AUTHOR_PROFILE_PIC_COLM, news.getUserProfile().getProfilePic());
+            newsDocument.append(AUTHOR_NAME_COLM, news.getUserProfile().getUserName());
+
+            mongoClient.getDatabase(DB_NAME).getCollection(NEWS_TABLE).insertOne(newsDocument).continueWith(new Continuation<Void, Object>() {
                 @Override
                 public Object then(@NonNull Task<Void> task) {
 
@@ -364,6 +379,14 @@ public class MongoDBConnector  {
                         return task.getResult();
                     }
                     return null;
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Object>() {
+                @Override
+                public void onComplete(@NonNull Task<Object> task) {
+                    Intent intent = new Intent(context, HomePage.class);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+                    Log.d(TAG, "onComplete: inserted");
                 }
             });
 
@@ -474,7 +497,20 @@ public class MongoDBConnector  {
                                 news.setLikeCount(resultSet.getDouble(LIKE_COUNT_COLM));
                                 news.setDislikeCount(resultSet.getDouble(DISLIKE_COUNT_COLM));
                                 news.setUserProfile(new UserProfile("", resultSet.getString(MOBILE_NO_COLM), "", "", false, 0));
-                                news.setNewsPic(Arrays.asList(null == resultSet.get(PICS_COLM, Bitmap.class) ? BitmapFactory.decodeResource(context.getResources(), R.drawable.dummy) : resultSet.get(PICS_COLM, Bitmap.class)));
+                                Binary newsImageBinary = resultSet.get(PICS_COLM,Binary.class);
+                                if (null!=newsImageBinary){
+                                    byte[] newsImage = newsImageBinary.getData();
+                                    Bitmap  bitmap = BitmapFactory.decodeByteArray(newsImage, 0, newsImage.length);
+                                    //news.setNewsPic(Arrays.asList(null == resultSet.get(PICS_COLM, Bitmap.class) ? BitmapFactory.decodeResource(context.getResources(), R.drawable.dummy) : resultSet.get(PICS_COLM, Bitmap.class)));
+                                    List<Bitmap> bitMapList = new ArrayList<Bitmap>();
+                                    bitMapList.add(bitmap);
+                                    news.setNewsPic(bitMapList);
+                                }else {
+                                    List<Bitmap> bitMapList = new ArrayList<Bitmap>();
+                                    bitMapList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.dummy));
+                                    news.setNewsPic(bitMapList);
+
+                                }
                                 news.setHeading(resultSet.getString(HEADING_COLM));
                                 Calendar createdDate = Calendar.getInstance();//(null == resultSet.get(CREATED_TIME_COLM, Calendar.class))?Calendar.getInstance():resultSet.get(CREATED_TIME_COLM, Calendar.class);
                                 news.setDate(createdDate.get(Calendar.DATE) + "-" + createdDate.get(Calendar.MONTH) + "-" + createdDate.get(Calendar.YEAR));
@@ -483,7 +519,7 @@ public class MongoDBConnector  {
                                 newsList.add(news);
                             }
                         }catch (Exception e){
-                            Log.d(TAG,"Exception : "+e.getMessage());
+                            Log.d(TAG,"Exception in get : "+e.getMessage());
 
                         }
 
@@ -495,7 +531,7 @@ public class MongoDBConnector  {
                 public void onComplete(@NonNull Task<List<News>> task) {
 
                     Settings.ONLINE_NEWS = task.getResult();
-                    Log.d(TAG,"Result : "+Settings.ONLINE_NEWS.get(0).getHeading());
+                    //Log.d(TAG,"Result : "+Settings.ONLINE_NEWS.get(0).getHeading());
 
                     Intent intent = new Intent(context, HomePage.class);
                     context.startActivity(intent);

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.demo.thirdeye.NewsPostActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/postDetails"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/postNewsPics"
+                android:ems="10"
+                android:hint="Details"
+                android:inputType="textMultiLine" />
+
+            <EditText
+                android:id="@+id/postHeading"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textMultiLine"
+                android:text="Heading"
+                />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/postTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/postNewsPics"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/postNewsPics"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/postHeading"
+                android:scrollbars="none">
+
+            </android.support.v4.view.ViewPager>
+
+            <Button
+                android:id="@+id/postButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/postTabLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="168dp"
+                android:text="POST"
+                android:background="@drawable/rounded_custom_button"
+
+                />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

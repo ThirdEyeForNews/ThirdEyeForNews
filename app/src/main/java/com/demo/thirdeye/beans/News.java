@@ -3,6 +3,7 @@ package com.demo.thirdeye.beans;
 import android.graphics.Bitmap;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class News {
     UserProfile userProfile;
     String date;
     String time;
+    Calendar dateAndTime;
 
     public News(){}
 
@@ -44,6 +46,14 @@ public class News {
         this.userProfile = userProfile;
         this.date =date;
         this.time = time;
+    }
+
+    public Calendar getDateAndTime() {
+        return dateAndTime;
+    }
+
+    public void setDateAndTime(Calendar dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public String getDate() {

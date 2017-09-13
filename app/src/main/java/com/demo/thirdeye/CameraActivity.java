@@ -372,14 +372,16 @@ public class CameraActivity extends AppCompatActivity implements SensorEventList
                     if (imageAvailable){
                         for (int i =0;i<capturedImages.size();i++){
                             if (capturedImagesSelection.get(i)){
-                                selectedImageBmpList.add(capturedImages.get(i));
+                                if (!selectedImageBmpList.contains(capturedImages.get(i)))
+                                    selectedImageBmpList.add(capturedImages.get(i));
                             }
                         }
                     }
                     if (videoAvailable){
                         for (int i =0;i<videoFilePath.size();i++){
                             if (selectedVideoBmp.get(i)){
-                                selectedVideoUriList.add(Uri.fromFile(new File(videoFilePath.get(i))));
+                                if (!selectedVideoUriList.contains(Uri.fromFile(new File(videoFilePath.get(i)))))
+                                    selectedVideoUriList.add(Uri.fromFile(new File(videoFilePath.get(i))));
                             }
                         }
                     }
@@ -765,9 +767,11 @@ public class CameraActivity extends AppCompatActivity implements SensorEventList
                     cursor.close();
                     if(mimeType.startsWith("image")) {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedItems.get(i));
-                        selectedImageBmpList.add(bitmap);
+                        if (!selectedImageBmpList.contains(bitmap))
+                            selectedImageBmpList.add(bitmap);
                     }
                     else if(mimeType.startsWith("video")) {
+                        if (!selectedVideoUriList.contains(selectedItems.get(i)))
                         selectedVideoUriList.add(selectedItems.get(i));
                     }
                 }

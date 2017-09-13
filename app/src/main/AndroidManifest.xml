@@ -30,9 +30,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/thirdeye_icon"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/thirdeye_icon"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -67,9 +67,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_camara"
             android:theme="@style/HiddenTitleTheme" />
-        <activity android:name=".MediaSelectedActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity android:name=".MediaSelectedActivity"></activity>
+        <activity android:name=".NewsPostActivity"></activity>
     </application>
 
 </manifest>
